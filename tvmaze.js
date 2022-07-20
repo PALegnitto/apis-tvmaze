@@ -17,20 +17,10 @@ async function getShowsByTerm(term) {
   console.debug('GET',response );
   return [
     {
-      id: 1767,
-      name: "The Bletchley Circle",
-      summary:
-        `<p><b>The Bletchley Circle</b> follows the journey of four ordinary 
-           women with extraordinary skills that helped to end World War II.</p>
-         <p>Set in 1952, Susan, Millie, Lucy and Jean have returned to their 
-           normal lives, modestly setting aside the part they played in 
-           producing crucial intelligence, which helped the Allies to victory 
-           and shortened the war. When Susan discovers a hidden code behind an
-           unsolved murder she is met by skepticism from the police. She 
-           quickly realises she can only begin to crack the murders and bring
-           the culprit to justice with her former friends.</p>`,
-      image:
-          "http://static.tvmaze.com/uploads/images/medium_portrait/147/369403.jpg"
+      id: response.data[0].show.id,
+      name: response.data[0].show.name,
+      summary: response.data[0].show.summary,
+      image: response.data[0].show.image.original
     }
   ]
 }
@@ -45,9 +35,9 @@ function populateShows(shows) {
     const $show = $(
         `<div data-show-id="${show.id}" class="Show col-md-12 col-lg-6 mb-4">
          <div class="media">
-           <img 
-              src="http://static.tvmaze.com/uploads/images/medium_portrait/160/401704.jpg" 
-              alt="Bletchly Circle San Francisco" 
+           <img
+              src= ${show.image}
+              alt= ${show.name}
               class="w-25 me-3">
            <div class="media-body">
              <h5 class="text-primary">${show.name}</h5>
@@ -56,7 +46,7 @@ function populateShows(shows) {
                Episodes
              </button>
            </div>
-         </div>  
+         </div>
        </div>
       `);
 
