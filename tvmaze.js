@@ -15,14 +15,20 @@ const $searchForm = $("#searchForm");
 async function getShowsByTerm(term) {
   const response = await axios.get('http://api.tvmaze.com/search/shows', {params: {q: term}})
   console.debug('GET',response );
-  return [
-    {
-      id: response.data[0].show.id,
-      name: response.data[0].show.name,
-      summary: response.data[0].show.summary,
-      image: response.data[0].show.image.original
+
+  const showList = response.data.map( function (x) {
+
+    const result = {  
+      id: x.show.id,
+      name: x.show.name,
+      summary: x.show.summary,
+      image: x.show.image.original ? x.show.image.original : "https://tinyurl.com/tv-missing"
     }
-  ]
+   return result;
+  
+  })
+
+return showList;
 }
 
 
@@ -37,7 +43,7 @@ function populateShows(shows) {
          <div class="media">
            <img
               src= ${show.image}
-              alt= ${show.name}
+              alt= 'test'
               class="w-25 me-3">
            <div class="media-body">
              <h5 class="text-primary">${show.name}</h5>
