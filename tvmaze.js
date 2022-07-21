@@ -17,15 +17,24 @@ async function getShowsByTerm(term) {
   console.debug('GET',response );
 
   const showList = response.data.map( function (x) {
+    let fallBackImage = "";
+    if (x.show.image === null) {
+      fallBackImage = "https://tinyurl.com/tv-missing"
 
-    const result = {  
+    }
+    else {
+      fallBackImage = x.show.image.original;
+    }
+
+    const result = {
       id: x.show.id,
       name: x.show.name,
       summary: x.show.summary,
-      image: x.show.image.original ? x.show.image.original : "https://tinyurl.com/tv-missing"
+      image: fallBackImage
+      // x.show.image.original ? x.show.image.original : "https://tinyurl.com/tv-missing"
     }
    return result;
-  
+
   })
 
 return showList;
@@ -82,8 +91,23 @@ $searchForm.on("submit", async function (evt) {
  *      { id, name, season, number }
  */
 
-// async function getEpisodesOfShow(id) { }
+async function getEpisodesOfShow(id) {
+    const response = await axios.get("http://api.tvmaze.com/shows", {params: {q: SOMETHING}})
+    const episodeList = response.data.map(function(x) {
+      const result = {
+        id: x.id,
+        name: x.name,
+        season: x.season,
+        number: x.number
+      }
+      return result;
+    }
+    )
+    return episodeList;
+}
 
 /** Write a clear docstring for this function... */
 
 // function populateEpisodes(episodes) { }
+
+//put event listener on showsList area so when we click on button execute function
