@@ -92,7 +92,7 @@ $searchForm.on("submit", async function (evt) {
  */
 
 async function getEpisodesOfShow(id) {
-    const response = await axios.get("http://api.tvmaze.com/shows", {params: {q: SOMETHING}})
+    const response = await axios.get(`http://api.tvmaze.com/shows/${id}/episodes`);
     const episodeList = response.data.map(function(x) {
       const result = {
         id: x.id,
@@ -106,8 +106,17 @@ async function getEpisodesOfShow(id) {
     return episodeList;
 }
 
-/** Write a clear docstring for this function... */
+/** Formatting each episode and adding them to the episodes area in DOM*/
 
-// function populateEpisodes(episodes) { }
+function populateEpisodes(episodes) {
+  $episodesArea.show();
+  for (let episode of episodes) {
+    const uniqueEpisode = 
+      $("#episodesList").append(`<li>${episode.name} 
+      (season ${episode.season}, number ${episode.number})</li>`);
+    
 
+  $episodesArea.append(uniqueEpisode);
+ };
+}
 //put event listener on showsList area so when we click on button execute function
