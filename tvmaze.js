@@ -13,7 +13,8 @@ const $searchForm = $("#searchForm");
  */
 
 async function getShowsByTerm(term) {
-  const response = await axios.get('http://api.tvmaze.com/search/shows', {params: {q: term}})
+  const response = await axios.get('http://api.tvmaze.com/search/shows',
+  {params: {q: term}})
   console.debug('GET',response );
 
   const showList = response.data.map( function (x) {
@@ -52,7 +53,7 @@ function populateShows(shows) {
          <div class="media">
            <img
               src= ${show.image}
-              alt= 'test'
+              alt= ${show.name}
               class="w-25 me-3">
            <div class="media-body">
              <h5 class="text-primary">${show.name}</h5>
@@ -64,7 +65,6 @@ function populateShows(shows) {
          </div>
        </div>
       `);
-
     $showsList.append($show);  }
 }
 
@@ -109,14 +109,26 @@ async function getEpisodesOfShow(id) {
 /** Formatting each episode and adding them to the episodes area in DOM*/
 
 function populateEpisodes(episodes) {
-  $episodesArea.show();
-  for (let episode of episodes) {
-    const uniqueEpisode = 
-      $("#episodesList").append(`<li>${episode.name} 
-      (season ${episode.season}, number ${episode.number})</li>`);
-    
+  $("#episodesList").empty();
 
-  $episodesArea.append(uniqueEpisode);
+  for (let episode of episodes) {
+    const uniqueEpisode =
+      $(`<li>${episode.name}
+      (season ${episode.season}, number ${episode.number})</li>`);
+
+  $("#episodesList").append(uniqueEpisode);
  };
+ $episodesArea.show();
 }
 //put event listener on showsList area so when we click on button execute function
+
+async function searchForEpisodesAndDisplay(evt) {
+  //search "closest" ancestor with the class of
+  //.Show (which is put onto the enclosing div, which
+  // has the .data-show-id attribute).
+  const id = $(evt.target).closest(".Show").data("show-id");
+  const episodes = await getEpisodesOfShow(id);
+  populateEpisodes(episodes);
+}
+
+$showsList.on("click", ".Show-getEpisodes", searchForEpisodesAndDisplay);
